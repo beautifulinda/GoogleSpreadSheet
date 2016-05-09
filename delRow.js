@@ -3,19 +3,20 @@ var async = require("async");
 var _ = require("lodash");
 
 // spreadsheet key is the long id in the sheets URL
+// var doc = new GoogleSpreadsheet('16muDjiwktwBMU5sTmhxPlwX5sly8VK-wvd1OVBFPPYk');
 var doc;
 var sheet;
 var rowLength;
 
-module.exports = updRow;
+module.exports = delRow;
 
-function updRow(req) {
+function delRow(req) {
     var reqData = req.data,
         creds = req.cred,
         docKey = req.key;
 
     async.series([
-        function(step) {
+        function(step){
             doc = new GoogleSpreadsheet(docKey);
             step();
         },
@@ -29,18 +30,15 @@ function updRow(req) {
             });
         },
         function workingWithRows(step) {
+            // google provides some query options
             sheet.getRows({
                 offset: 1,
                 limit: sheet.rowCount - 1
             }, function(err, rows) {
                 _.map(rows, function(el, idx) {
-                    if (el.mid === reqData.mid) {
-                        el.first_name = reqData.first_name;
-                        el.last_name = reqData.last_name;
-                        el.phone = reqData.phone;
-                        el.email = reqData.email;
-                        el.save(function() {
-                            console.log('saved');
+                    if (reqData.mid && el.mid === reqData.mid) {
+                        el.del(function() {
+                            console.log('delRow deleted');
                         });
                     }
                 });
