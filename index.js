@@ -4,7 +4,7 @@ var app = express();
 var addRow = require('./addRow.js');
 var updRow = require('./updRow.js');
 var delRow = require('./delRow.js');
-var isValidDoc = require('checkDocId.js');
+var isValidDoc = require('./checkDocId.js');
 
 app.get('/', function(req, res) {
     res.send('Hello World');
